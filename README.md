@@ -76,7 +76,7 @@ To create an application that is able to keep track of a budget. It should be ve
 
 ### Week 1 (3/1 - 3/8)
 - [x] Create repository on github.
-- [ ] Setup permissions.
+- [x] Setup permissions.
 - [ ] Create issues for features.
 - [ ] Create project skeleton.
     - [ ] maven configured
