@@ -78,11 +78,11 @@ To create an application that is able to keep track of a budget. It should be ve
 - [x] Create repository on github.
 - [x] Setup permissions.
 - [x] Create issues for features.
-- [ ] Create project skeleton.
-    - [ ] maven configured
-	- [ ] spark-java configured
-	- [ ] logging configured
-	- [ ] database configured
+- [x] Create project skeleton.
+    - [x] maven configured
+    - [x] spark-java configured
+    - [x] logging configured
+    - [x] database configured
 
 ### Week 2 (3/8 - 3/15)
 - [ ] Track Spending in Database:
