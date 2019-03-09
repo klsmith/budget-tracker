@@ -74,7 +74,7 @@ To create an application that is able to keep track of a budget. It should be ve
 **1.0.0 Start:** Friday, 3/1/2019  
 **1.0.0 Deadline:** Friday, 5/10/2019  
 
-### Week 1 (3/1 - 3/8)
+### ~~Week 1 (3/1 - 3/8)~~
 - [x] Create repository on github.
 - [x] Setup permissions.
 - [x] Create issues for features.
