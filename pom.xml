@@ -1,135 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>io.github.klsmith</groupId>
-	<artifactId>budget-tracker</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <groupId>io.github.klsmith</groupId>
+    <artifactId>budget-tracker</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<properties>
-		<!-- Build Properties -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<downloadSources>true</downloadSources>
-		<downloadJavadocs>true</downloadJavadocs>
-		<java.version>1.8</java.version>
+    <properties>
+        <!-- Build Properties -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <downloadSources>true</downloadSources>
+        <downloadJavadocs>true</downloadJavadocs>
+        <java.version>1.8</java.version>
 
-		<!-- Plugin Version Properties -->
-		<compiler.version>3.8.0</compiler.version>
-		<surefire.version>2.22.1</surefire.version>
-		<exec.version>1.2.1</exec.version>
+        <!-- Plugin Version Properties -->
+        <compiler.version>3.8.0</compiler.version>
+        <surefire.version>2.22.1</surefire.version>
+        <exec.version>1.2.1</exec.version>
 
-		<!-- Core Version Properties -->
-		<spark.version>2.7.2</spark.version>
-		<pebble.version>3.0.8</pebble.version>
-		<sql2o.version>1.6.0</sql2o.version>
-		<mariadb.jdbc.version>2.4.0</mariadb.jdbc.version>
+        <!-- Core Version Properties -->
+        <spark.version>2.7.2</spark.version>
+        <pebble.version>3.0.8</pebble.version>
+        <javamoney.version>1.3</javamoney.version>
+        <sql2o.version>1.6.0</sql2o.version>
+        <mariadb.jdbc.version>2.4.0</mariadb.jdbc.version>
 
-		<!-- Logging Version Properties -->
-		<slf4j.version>1.7.26</slf4j.version>
-		<logback.version>1.2.3</logback.version>
+        <!-- Logging Version Properties -->
+        <slf4j.version>1.7.26</slf4j.version>
+        <logback.version>1.2.3</logback.version>
 
-		<!-- Test Version Properties -->
-		<junit.version>5.4.0</junit.version>
-		<quicktheories.version>0.26</quicktheories.version>
-	</properties>
+        <!-- Test Version Properties -->
+        <junit.version>5.4.0</junit.version>
+        <quicktheories.version>0.26</quicktheories.version>
+        <mariaDB4J.version>2.4.0</mariaDB4J.version>
+    </properties>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${compiler.version}</version>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${surefire.version}</version>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>${exec.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>java</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<mainClass>io.github.klsmith.budgettracker.Main</mainClass>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>io.github.klsmith.budgettracker.Main</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-	<dependencies>
-		<!-- Core Dependencies -->
-		<dependency>
-			<groupId>com.sparkjava</groupId>
-			<artifactId>spark-core</artifactId>
-			<version>${spark.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.pebbletemplates</groupId>
-			<artifactId>pebble</artifactId>
-			<version>${pebble.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sql2o</groupId>
-			<artifactId>sql2o</artifactId>
-			<version>${sql2o.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<version>${mariadb.jdbc.version}</version>
-		</dependency>
+    <dependencies>
+        <!-- Core Dependencies -->
+        <dependency>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-core</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.pebbletemplates</groupId>
+            <artifactId>pebble</artifactId>
+            <version>${pebble.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.javamoney</groupId>
+            <artifactId>moneta</artifactId>
+            <version>${javamoney.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.sql2o</groupId>
+            <artifactId>sql2o</artifactId>
+            <version>${sql2o.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>${mariadb.jdbc.version}</version>
+        </dependency>
 
+        <!-- Logging Dependencies -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
 
-		<!-- Logging Dependencies -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<version>${logback.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
-		</dependency>
-
-		<!-- Test Dependencies -->
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.quicktheories</groupId>
-			<artifactId>quicktheories</artifactId>
-			<version>${quicktheories.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+        <!-- Test Dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.quicktheories</groupId>
+            <artifactId>quicktheories</artifactId>
+            <version>${quicktheories.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.vorburger.mariaDB4j</groupId>
+            <artifactId>mariaDB4j</artifactId>
+            <version>${mariaDB4J.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>
