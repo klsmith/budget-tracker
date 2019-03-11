@@ -76,6 +76,10 @@ public class MoneyEntry {
         return Objects.hash(id, amount, date, tags);
     }
 
+    /**
+     * @return true if the object is a MoneyEntry and all fields are equal;
+     *         otherwise, false.
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof MoneyEntry) {

@@ -6,6 +6,9 @@ import java.util.Map;
 import org.sql2o.converters.Converter;
 import org.sql2o.converters.ConvertersProvider;
 
+/**
+ * Provides custom converter implementation so that Sql2o can access them.
+ */
 public class Sql2oConvertersProvider implements ConvertersProvider {
 
     @Override

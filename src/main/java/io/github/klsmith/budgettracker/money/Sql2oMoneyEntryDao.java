@@ -11,10 +11,16 @@ import io.github.klsmith.budgettracker.sql2o.Sql2oDao;
 import io.github.klsmith.budgettracker.tag.Sql2oTagDao;
 import io.github.klsmith.budgettracker.tag.Tag;
 
+/**
+ * Implementation of MoneyEntryDao using Sql2o.
+ */
 public class Sql2oMoneyEntryDao extends Sql2oDao implements MoneyEntryDao {
 
     public final Sql2oTagDao tagDao;
 
+    /**
+     * Construct using Sql2o object and Sql2oTagDao.
+     */
     public Sql2oMoneyEntryDao(Sql2o sql2o, Sql2oTagDao tagDao) {
         super(sql2o);
         this.tagDao = tagDao;
@@ -25,6 +31,11 @@ public class Sql2oMoneyEntryDao extends Sql2oDao implements MoneyEntryDao {
         return transaction(connection -> create(connection, moneyEntryData));
     }
 
+    /**
+     * Uses an existing connection instead of creating a new one.
+     * 
+     * @see Sql2oMoneyEntryDao#create(MoneyEntry)
+     */
     public MoneyEntry create(Connection connection, MoneyEntry moneyEntryData) {
         connection.createQuery("INSERT INTO MoneyEntry (amount, date) VALUES (:amountParam, :dateParam);")
                 .addParameter("amountParam", moneyEntryData.getAmount().toString())
@@ -43,6 +54,11 @@ public class Sql2oMoneyEntryDao extends Sql2oDao implements MoneyEntryDao {
         return transaction(connection -> read(connection, id));
     }
 
+    /**
+     * Uses an existing connection instead of creating a new one.
+     * 
+     * @see Sql2oMoneyEntryDao#read(long)
+     */
     public Optional<MoneyEntry> read(Connection connection, long id) {
         final MoneyEntry entry = connection
                 .createQuery("SELECT * FROM MoneyEntry WHERE id = :idParam;")

@@ -2,15 +2,16 @@ package io.github.klsmith.budgettracker.sql2o;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 
 import org.sql2o.converters.Converter;
-import org.sql2o.converters.ConverterException;
 
+/**
+ * A converter class for Sql2o that handles {@link LocalDate} objects.
+ */
 public class LocalDateConverter implements Converter<LocalDate> {
 
     @Override
-    public LocalDate convert(Object obj) throws ConverterException {
+    public LocalDate convert(Object obj) {
         if (obj instanceof Date) {
             final Date date = (Date) obj;
             return date.toLocalDate();
