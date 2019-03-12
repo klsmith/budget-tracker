@@ -1,5 +1,7 @@
 package io.github.klsmith.budgettracker.money;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,5 +25,13 @@ public interface MoneyEntryDao {
      *         wasn't a row with that id.
      */
     public Optional<MoneyEntry> read(long id);
+
+    /**
+     * Read all rows that are associated with the given date.
+     * 
+     * @return a list containing the row data, or an empty list if there weren't any
+     *         rows with the given date.
+     */
+    public List<MoneyEntry> read(LocalDate date);
 
 }

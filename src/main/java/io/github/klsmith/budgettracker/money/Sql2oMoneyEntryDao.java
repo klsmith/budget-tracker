@@ -1,5 +1,7 @@
 package io.github.klsmith.budgettracker.money;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +71,24 @@ public class Sql2oMoneyEntryDao extends Sql2oDao implements MoneyEntryDao {
         }
         final List<Tag> tags = tagDao.readForEntry(connection, id);
         return Optional.of(new MoneyEntry(entry, tags));
+    }
+
+    @Override
+    public List<MoneyEntry> read(LocalDate date) {
+        return transaction(connection -> read(connection, date));
+    }
+
+    public List<MoneyEntry> read(Connection connection, LocalDate date) {
+        final List<MoneyEntry> response = connection
+                .createQuery("SELECT * FROM MoneyEntry WHERE date = :dateParam;")
+                .addParameter("dateParam", date)
+                .executeAndFetch(MoneyEntry.class);
+        final List<MoneyEntry> results = new ArrayList<>(response.size());
+        for (MoneyEntry entry : response) {
+            final List<Tag> tags = tagDao.readForEntry(entry.getId());
+            results.add(new MoneyEntry(entry, tags));
+        }
+        return results;
     }
 
 }
