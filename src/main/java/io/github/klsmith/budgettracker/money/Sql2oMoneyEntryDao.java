@@ -78,6 +78,11 @@ public class Sql2oMoneyEntryDao extends Sql2oDao implements MoneyEntryDao {
         return transaction(connection -> read(connection, date));
     }
 
+    /**
+     * Uses an existing connection instead of creating a new one.
+     * 
+     * @see Sql2oMoneyEntryDao#read(LocalDate)
+     */
     public List<MoneyEntry> read(Connection connection, LocalDate date) {
         final List<MoneyEntry> response = connection
                 .createQuery("SELECT * FROM MoneyEntry WHERE date = :dateParam;")
