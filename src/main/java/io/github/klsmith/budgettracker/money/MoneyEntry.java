@@ -25,11 +25,19 @@ public class MoneyEntry {
         this(entry.getId(), entry.getAmount(), entry.getDate(), newTags);
     }
 
+    public MoneyEntry(BigDecimal amount, LocalDate date, Collection<Tag> tags) {
+        this(-1, amount, date, tags);
+    }
+
     public MoneyEntry(long id, BigDecimal amount, LocalDate date, Collection<Tag> tags) {
         this.id = id;
         this.amount = amount;
         this.date = date;
         this.tags = Collections.unmodifiableList(new ArrayList<>(tags));
+    }
+
+    public MoneyEntry(BigDecimal amount, LocalDate date, Tag... tags) {
+        this(-1, amount, date, tags);
     }
 
     public MoneyEntry(long id, BigDecimal amount, LocalDate date, Tag... tags) {

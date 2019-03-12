@@ -15,18 +15,16 @@ public class LocalDateConverter implements Converter<LocalDate> {
         if (obj instanceof Date) {
             final Date date = (Date) obj;
             return date.toLocalDate();
-        } else {
-            return null;
         }
+        return null;
     }
 
     @Override
     public Object toDatabaseParam(LocalDate localDate) {
-        if (localDate == null) {
-            return null;
-        } else {
+        if (null != localDate) {
             return Date.valueOf(localDate);
         }
+        return null;
     }
 
 }
