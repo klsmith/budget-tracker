@@ -8,47 +8,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.sql2o.Sql2o;
 
-import ch.vorburger.exec.ManagedProcessException;
+import io.github.klsmith.budgettracker.sql2o.Sql2oDaoIntegration;
 import io.github.klsmith.budgettracker.tag.Sql2oTagDao;
 import io.github.klsmith.budgettracker.tag.Tag;
-import io.github.klsmith.budgettracker.test.util.DatabaseSchemaConstructor;
-import io.github.klsmith.budgettracker.test.util.EmbeddedDatabase;
 
-class Sql2oMoneyEntryDaoIT {
+class Sql2oMoneyEntryDaoIT extends Sql2oDaoIntegration {
 
-    private final EmbeddedDatabase database = new EmbeddedDatabase();
-    private final Sql2o sql2o = getSql2o();
-    private final Sql2oTagDao tagDao = new Sql2oTagDao(sql2o);
-    private final Sql2oMoneyEntryDao moneyEntryDao = new Sql2oMoneyEntryDao(sql2o, tagDao);
-    private final DatabaseSchemaConstructor constructor = new DatabaseSchemaConstructor(sql2o);
-
-    private Sql2o getSql2o() {
-        return new Sql2o(
-                database.getUrl(),
-                database.getUser(),
-                database.getPass());
-    }
-
-    @BeforeEach
-    void setup() throws ManagedProcessException {
-        database.setup();
-        constructor.transaction(connection -> {
-            constructor.setupMoneyEntryTable(connection);
-            constructor.setupTagTable(connection);
-            constructor.setupTagMoneyEntryMapTable(connection);
-            return null;
-        });
-    }
-
-    @AfterEach
-    void tearDown() throws ManagedProcessException {
-        database.tearDown();
-    }
+    private final Sql2oTagDao tagDao = new Sql2oTagDao(getSql2o());
+    private final Sql2oMoneyEntryDao moneyEntryDao = new Sql2oMoneyEntryDao(getSql2o(), tagDao);
 
     @Test
     void testCreateSimple() {
