@@ -62,15 +62,15 @@ public class Sql2oMoneyEntryDao extends Sql2oDao implements MoneyEntryDao {
      * @see Sql2oMoneyEntryDao#read(long)
      */
     public Optional<MoneyEntry> read(Connection connection, long id) {
-        final MoneyEntry entry = connection
+        final MoneyEntryBuilder builder = connection
                 .createQuery("SELECT * FROM MoneyEntry WHERE id = :idParam;")
                 .addParameter("idParam", id)
-                .executeAndFetchFirst(MoneyEntry.class);
-        if (null == entry) {
+                .executeAndFetchFirst(MoneyEntryBuilder.class);
+        if (null == builder) {
             return Optional.empty();
         }
         final List<Tag> tags = tagDao.readForEntry(connection, id);
-        return Optional.of(new MoneyEntry(entry, tags));
+        return Optional.of(builder.withTags(tags).build());
     }
 
     @Override
@@ -84,14 +84,14 @@ public class Sql2oMoneyEntryDao extends Sql2oDao implements MoneyEntryDao {
      * @see Sql2oMoneyEntryDao#read(LocalDate)
      */
     public List<MoneyEntry> read(Connection connection, LocalDate date) {
-        final List<MoneyEntry> response = connection
+        final List<MoneyEntryBuilder> response = connection
                 .createQuery("SELECT * FROM MoneyEntry WHERE date = :dateParam;")
                 .addParameter("dateParam", date)
-                .executeAndFetch(MoneyEntry.class);
+                .executeAndFetch(MoneyEntryBuilder.class);
         final List<MoneyEntry> results = new ArrayList<>(response.size());
-        for (MoneyEntry entry : response) {
-            final List<Tag> tags = tagDao.readForEntry(entry.getId());
-            results.add(new MoneyEntry(entry, tags));
+        for (MoneyEntryBuilder builder : response) {
+            final List<Tag> tags = tagDao.readForEntry(connection, builder.getId());
+            results.add(builder.withTags(tags).build());
         }
         return results;
     }

@@ -2,6 +2,7 @@ package io.github.klsmith.budgettracker.tag;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
@@ -89,7 +90,8 @@ public class Sql2oTagDao extends Sql2oDao implements TagDao {
         return Optional.ofNullable(connection
                 .createQuery("SELECT * FROM Tag WHERE name = :nameParam;")
                 .addParameter("nameParam", tagName)
-                .executeAndFetchFirst(Tag.class));
+                .executeAndFetchFirst(TagBuilder.class))
+                .map(TagBuilder::build);
     }
 
     @Override
@@ -106,7 +108,8 @@ public class Sql2oTagDao extends Sql2oDao implements TagDao {
         return Optional.ofNullable(connection
                 .createQuery("SELECT * FROM Tag WHERE id = :idParam;")
                 .addParameter("idParam", id)
-                .executeAndFetchFirst(Tag.class));
+                .executeAndFetchFirst(TagBuilder.class))
+                .map(TagBuilder::build);
     }
 
     @Override
@@ -124,7 +127,10 @@ public class Sql2oTagDao extends Sql2oDao implements TagDao {
                 + "JOIN TagMoneyEntry ON TagMoneyEntry.tagId = Tag.id\n"
                 + "WHERE TagMoneyEntry.moneyEntryId = :entryIdParam;")
                 .addParameter("entryIdParam", entryId)
-                .executeAndFetch(Tag.class);
+                .executeAndFetch(TagBuilder.class)
+                .stream()
+                .map(TagBuilder::build)
+                .collect(Collectors.toList());
     }
 
 }

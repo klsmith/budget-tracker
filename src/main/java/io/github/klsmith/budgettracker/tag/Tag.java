@@ -11,19 +11,17 @@ public class Tag {
     private final long id;
     private final String name;
 
-    /**
-     * Constructs a tag with the given name and an id of -1.
-     */
-    public Tag(String name) {
-        this(-1, name);
+    Tag(TagBuilder builder) {
+        id = builder.getId();
+        name = Objects.requireNonNull(builder.getName());
     }
 
-    /**
-     * Constructs a tag with the given name and id.
-     */
-    public Tag(long id, String name) {
-        this.id = id;
-        this.name = name;
+    public static TagBuilder builder() {
+        return new TagBuilder();
+    }
+
+    public TagBuilder asBuilder() {
+        return new TagBuilder(this);
     }
 
     /**

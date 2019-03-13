@@ -3,7 +3,6 @@ package io.github.klsmith.budgettracker.money;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -21,34 +20,19 @@ public class MoneyEntry {
     private final LocalDate date;
     private final List<Tag> tags;
 
-    public MoneyEntry(MoneyEntry entry, Collection<Tag> newTags) {
-        this(entry.getId(), entry.getAmount(), entry.getDate(), newTags);
+    MoneyEntry(MoneyEntryBuilder builder) {
+        id = Objects.requireNonNull(builder.getId());
+        amount = Objects.requireNonNull(builder.getAmount());
+        date = Objects.requireNonNull(builder.getDate());
+        tags = Collections.unmodifiableList(new ArrayList<>(builder.getTags()));
     }
 
-    public MoneyEntry(BigDecimal amount, LocalDate date, Collection<Tag> tags) {
-        this(-1, amount, date, tags);
+    public static MoneyEntryBuilder builder() {
+        return new MoneyEntryBuilder();
     }
 
-    public MoneyEntry(long id, BigDecimal amount, LocalDate date, Collection<Tag> tags) {
-        this.id = id;
-        this.amount = amount;
-        this.date = date;
-        this.tags = Collections.unmodifiableList(new ArrayList<>(tags));
-    }
-
-    public MoneyEntry(BigDecimal amount, LocalDate date, Tag... tags) {
-        this(-1, amount, date, tags);
-    }
-
-    public MoneyEntry(long id, BigDecimal amount, LocalDate date, Tag... tags) {
-        this.id = id;
-        this.amount = amount;
-        this.date = date;
-        final List<Tag> temp = new ArrayList<>(tags.length);
-        for (Tag tag : tags) {
-            temp.add(tag);
-        }
-        this.tags = Collections.unmodifiableList(temp);
+    public MoneyEntryBuilder asBuilder() {
+        return new MoneyEntryBuilder(this);
     }
 
     /**

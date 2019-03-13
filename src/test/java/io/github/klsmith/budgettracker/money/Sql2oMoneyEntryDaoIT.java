@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.github.klsmith.budgettracker.sql2o.Sql2oDaoIntegration;
@@ -18,38 +19,41 @@ class Sql2oMoneyEntryDaoIT extends Sql2oDaoIntegration {
 
     private final Sql2oTagDao tagDao = new Sql2oTagDao(getSql2o());
     private final Sql2oMoneyEntryDao moneyEntryDao = new Sql2oMoneyEntryDao(getSql2o(), tagDao);
+    private MoneyEntryBuilder builder;
+
+    @BeforeEach
+    void setupBuilder() {
+        builder = MoneyEntry.builder()
+                .withId(1)
+                .withAmount(new BigDecimal("100.0000"))
+                .withDate(LocalDate.of(1993, 8, 31))
+                .withTag(Tag.builder()
+                        .withId(1)
+                        .withName("Food")
+                        .build());
+    }
 
     @Test
     void testCreateSimple() {
-        final MoneyEntry expected = new MoneyEntry(1,
-                new BigDecimal("100.0000"),
-                LocalDate.of(1993, 8, 31),
-                new Tag(1, "Food"));
-        final MoneyEntry actual = moneyEntryDao.create(expected);
+        final MoneyEntry expected = builder.build();
+        final MoneyEntry actual = moneyEntryDao.create(builder.build());
         assertEquals(expected, actual);
     }
 
     @Test
     void testReadById() {
-        final MoneyEntry input = new MoneyEntry(1,
-                new BigDecimal("100.0000"),
-                LocalDate.of(1993, 8, 31),
-                new Tag(1, "Food"));
-        moneyEntryDao.create(input);
-        final Optional<MoneyEntry> expected = Optional.of(input);
-        final Optional<MoneyEntry> actual = moneyEntryDao.read(1);
+        moneyEntryDao.create(builder.build());
+        final Optional<MoneyEntry> expected = Optional.of(builder.build());
+        final Optional<MoneyEntry> actual = moneyEntryDao.read(builder.getId());
         assertEquals(expected, actual);
     }
 
     @Test
     void testReadByDate() {
-        final MoneyEntry input = new MoneyEntry(1,
-                new BigDecimal("100.0000"),
-                LocalDate.of(1993, 8, 31),
-                new Tag(1, "Food"));
-        moneyEntryDao.create(input);
-        final List<MoneyEntry> expected = Arrays.asList(input);
-        final List<MoneyEntry> actual = moneyEntryDao.read(LocalDate.of(1993, 8, 31));
+        ;
+        moneyEntryDao.create(builder.build());
+        final List<MoneyEntry> expected = Arrays.asList(builder.build());
+        final List<MoneyEntry> actual = moneyEntryDao.read(builder.getDate());
         assertEquals(expected, actual);
     }
 
