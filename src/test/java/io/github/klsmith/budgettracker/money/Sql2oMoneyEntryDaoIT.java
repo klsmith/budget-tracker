@@ -50,7 +50,6 @@ class Sql2oMoneyEntryDaoIT extends Sql2oDaoIntegration {
 
     @Test
     void testReadByDate() {
-        ;
         moneyEntryDao.create(builder.build());
         final List<MoneyEntry> expected = Arrays.asList(builder.build());
         final List<MoneyEntry> actual = moneyEntryDao.read(builder.getDate());

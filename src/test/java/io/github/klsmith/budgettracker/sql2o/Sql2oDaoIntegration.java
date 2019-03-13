@@ -26,7 +26,7 @@ public abstract class Sql2oDaoIntegration {
     }
 
     @BeforeEach
-    protected void setup() throws ManagedProcessException {
+    protected void setupDatabase() throws ManagedProcessException {
         database.setup();
         constructor.transaction(connection -> {
             constructor.setupMoneyEntryTable(connection);
@@ -37,7 +37,7 @@ public abstract class Sql2oDaoIntegration {
     }
 
     @AfterEach
-    protected void tearDown() throws ManagedProcessException {
+    protected void tearDownDatabase() throws ManagedProcessException {
         database.tearDown();
     }
 
