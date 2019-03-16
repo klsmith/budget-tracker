@@ -40,14 +40,14 @@ public class Tag {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(Long.valueOf(id), name);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Tag) {
             final Tag other = (Tag) obj;
-            return Objects.equals(id, other.id)
+            return id == other.id
                     && Objects.equals(name, other.name);
         }
         return false;

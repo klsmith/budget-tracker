@@ -65,6 +65,12 @@ public class MoneyEntryBuilder {
         return date;
     }
 
+    public MoneyEntryBuilder withTag(String tagName) {
+        return withTag(Tag.builder()
+                .withName(tagName)
+                .build());
+    }
+
     public MoneyEntryBuilder withTag(Tag tag) {
         this.tags.add(Objects.requireNonNull(tag, "Cannot have a null tag"));
         return this;

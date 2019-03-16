@@ -17,6 +17,7 @@ public interface MoneyEntryDao extends LongKeyDao<MoneyEntry> {
      * 
      * @return the newly created row from the database.
      */
+    @Override
     MoneyEntry create(MoneyEntry moneyEntryData);
 
     /**

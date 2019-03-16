@@ -21,7 +21,7 @@ public class MoneyEntry {
     private final List<Tag> tags;
 
     MoneyEntry(MoneyEntryBuilder builder) {
-        id = Objects.requireNonNull(builder.getId());
+        id = builder.getId();
         amount = Objects.requireNonNull(builder.getAmount());
         date = Objects.requireNonNull(builder.getDate());
         tags = Collections.unmodifiableList(new ArrayList<>(builder.getTags()));
@@ -65,7 +65,7 @@ public class MoneyEntry {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, amount, date, tags);
+        return Objects.hash(Long.valueOf(id), amount, date, tags);
     }
 
     /**
@@ -76,7 +76,7 @@ public class MoneyEntry {
     public boolean equals(Object obj) {
         if (obj instanceof MoneyEntry) {
             final MoneyEntry other = (MoneyEntry) obj;
-            return Objects.equals(id, other.id)
+            return id == other.id
                     && Objects.equals(amount, other.amount)
                     && date.isEqual(other.date)
                     && Objects.equals(tags, other.tags);

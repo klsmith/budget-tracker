@@ -48,7 +48,8 @@ public abstract class Sql2oDao {
      * @return the most recent AUTO_INCREMENT value generated.
      */
     public long getLastInsertId() {
-        return transaction(this::getLastInsertId);
+        return transaction(c -> Long.valueOf(getLastInsertId(c)))
+                .longValue();
     }
 
     /**

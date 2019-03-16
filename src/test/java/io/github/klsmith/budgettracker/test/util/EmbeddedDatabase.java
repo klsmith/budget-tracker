@@ -33,7 +33,7 @@ public class EmbeddedDatabase {
     }
 
     public String getUrl() {
-        return String.format(JDBC_URL_FORMAT, TEST_PORT);
+        return String.format(JDBC_URL_FORMAT, Integer.valueOf(TEST_PORT));
     }
 
     public String getUser() {

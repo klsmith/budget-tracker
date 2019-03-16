@@ -17,6 +17,7 @@ public interface TagDao extends LongKeyDao<Tag> {
      * 
      * @return the newly created row from the database.
      */
+    @Override
     public Tag create(Tag tag);
 
     /**

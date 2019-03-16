@@ -10,7 +10,7 @@ public interface LongKeyDao<T> extends Dao<Long, T> {
     }
 
     /**
-     * Read the row in the MoneyEntry table that matches the given id.
+     * Read the row in the table that matches the given id.
      * 
      * @return an optional containing the row data, or an empty optional if there
      *         wasn't a row with that id.
