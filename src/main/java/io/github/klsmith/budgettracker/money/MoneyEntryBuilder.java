@@ -15,7 +15,7 @@ public class MoneyEntryBuilder {
     private BigDecimal amount;
     private LocalDate date;
     private final List<Tag> tags;
-
+    
     MoneyEntryBuilder(MoneyEntry entry) {
         this(entry.getId(),
                 entry.getAmount(),

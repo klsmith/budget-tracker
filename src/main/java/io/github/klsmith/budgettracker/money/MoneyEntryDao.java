@@ -2,6 +2,7 @@ package io.github.klsmith.budgettracker.money;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import io.github.klsmith.budgettracker.dao.LongKeyDao;
 
@@ -27,5 +28,20 @@ public interface MoneyEntryDao extends LongKeyDao<MoneyEntry> {
      *         rows with the given date.
      */
     List<MoneyEntry> read(LocalDate date);
+
+    /**
+     * Update an existing row with the given id in the MoneyEntry table, with the
+     * given data.</br>
+     * <strong>Note:</strong> the id field in the data must be ignored in all
+     * implementations.
+     * 
+     * @return the updated row from the database.
+     */
+    Optional<MoneyEntry> update(long id, MoneyEntry moneyEntryData);
+
+    /**
+     * Delete an existing row with the given id from the MoneyEntry table.
+     */
+    void delete(long id);
 
 }

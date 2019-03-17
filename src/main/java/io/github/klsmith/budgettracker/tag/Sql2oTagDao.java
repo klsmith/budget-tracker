@@ -1,5 +1,6 @@
 package io.github.klsmith.budgettracker.tag;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,12 +69,26 @@ public class Sql2oTagDao extends Sql2oDao implements TagDao {
     public Tag map(Connection connection, long entryId, String tagName) {
         final Tag tag = read(connection, tagName)
                 .orElseGet(() -> create(connection, tagName));
-        connection.createQuery("INSERT INTO TagMoneyEntry "
+        connection.createQuery("INSERT IGNORE INTO TagMoneyEntry "
                 + "(tagId, moneyEntryId) VALUES (:tagIdParam, :entryIdParam);")
                 .addParameter("tagIdParam", tag.getId())
                 .addParameter("entryIdParam", entryId)
                 .executeUpdate();
         return tag;
+    }
+
+    @Override
+    public List<Tag> map(long entryId, List<Tag> tags) {
+        return transaction(connection -> map(connection, entryId, tags));
+    }
+
+    public List<Tag> map(Connection connection, long entryId, List<Tag> tags) {
+        final List<Tag> results = new ArrayList<>();
+        for (Tag tag : tags) {
+            final Tag newTag = map(connection, entryId, tag.getName());
+            results.add(newTag);
+        }
+        return results;
     }
 
     @Override
@@ -131,6 +146,20 @@ public class Sql2oTagDao extends Sql2oDao implements TagDao {
                 .stream()
                 .map(TagBuilder::build)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void delete(long id) {
+        transaction(connection -> {
+            delete(connection, id);
+            return null;
+        });
+    }
+
+    public void delete(Connection connection, long id) {
+        connection.createQuery("DELETE FROM Tag WHERE id = :idParam;")
+                .addParameter("idParam", id)
+                .executeUpdate();
     }
 
 }

@@ -20,4 +20,12 @@ public class MoneyEntryService {
         return context.getMoneyEntryDao().read(id);
     }
 
+    public Optional<MoneyEntry> update(long id, MoneyEntry entry) {
+        return context.getMoneyEntryDao().update(id, entry);
+    }
+
+    public void delete(long id) {
+        context.getMoneyEntryDao().delete(id);
+    }
+    
 }

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,61 +20,78 @@ class Sql2oTagDaoIT extends Sql2oDaoIntegration {
 
     private final Sql2oTagDao tagDao = new Sql2oTagDao(getSql2o());
     private final Sql2oMoneyEntryDao moneyEntryDao = new Sql2oMoneyEntryDao(getSql2o(), tagDao);
-    private TagBuilder builder;
+    private Tag testTag;
 
     @BeforeEach
     void setupBuilder() {
-        builder = Tag.builder()
+        testTag = Tag.builder()
                 .withId(1)
-                .withName("Test");
+                .withName("Test")
+                .build();
     }
 
     @Test
     void testCreateSimpleString() {
-        final Tag expected = builder.build();
-        final Tag actual = tagDao.create(builder.getName());
+        final Tag expected = testTag;
+        final Tag actual = tagDao.create(testTag.getName());
         assertEquals(expected, actual);
     }
 
     @Test
     void testCreateSimpleData() {
-        final Tag expected = builder.build();
-        final Tag actual = tagDao.create(builder.build());
+        final Tag expected = testTag;
+        final Tag actual = tagDao.create(testTag);
         assertEquals(expected, actual);
     }
 
     @Test
     void testReadById() {
-        tagDao.create(builder.getName());
-        final Optional<Tag> expected = Optional.of(builder.build());
+        tagDao.create(testTag.getName());
+        final Optional<Tag> expected = Optional.of(testTag);
         final Optional<Tag> actual = tagDao.read(1);
         assertEquals(expected, actual);
     }
 
     @Test
     void testReadByName() {
-        tagDao.create(builder.getName());
-        final Optional<Tag> expected = Optional.of(builder.build());
-        final Optional<Tag> actual = tagDao.read(builder.getName());
+        tagDao.create(testTag.getName());
+        final Optional<Tag> expected = Optional.of(testTag);
+        final Optional<Tag> actual = tagDao.read(testTag.getName());
         assertEquals(expected, actual);
     }
 
     @Test
     void testMapByMoneyEntry() {
-        final MoneyEntry entry = MoneyEntry.builder()
-                .withId(1)
+        final MoneyEntry entry = moneyEntryDao.create(MoneyEntry.builder()
                 .withAmount(new BigDecimal("50.0000"))
                 .withDate(LocalDate.of(1993, 8, 31))
-                .build();
-        moneyEntryDao.create(entry);
-        tagDao.map(entry.getId(), "Test");
-        tagDao.map(entry.getId(), "Test2");
-        final List<Tag> expected = Arrays.asList(
-                builder.build(),
-                Tag.builder()
-                        .withId(2)
-                        .withName("Test2")
-                        .build());
+                .build());
+        final Tag tagA = tagDao.map(entry.getId(), "Test");
+        final Tag tagB = tagDao.map(entry.getId(), "Test2");
+        final List<Tag> expected = Arrays.asList(tagA, tagB);
+        final List<Tag> actual = tagDao.readForEntry(entry.getId());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testDelete() {
+        final Tag tag = tagDao.create("Test");
+        final long id = tag.getId();
+        tagDao.delete(id);
+        final Optional<Tag> expected = Optional.empty();
+        final Optional<Tag> actual = tagDao.read(id);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testDeleteRemovesMapping() {
+        final MoneyEntry entry = moneyEntryDao.create(MoneyEntry.builder()
+                .withAmount(new BigDecimal("50.0000"))
+                .withDate(LocalDate.of(1993, 8, 31))
+                .build());
+        final Tag tag = tagDao.map(entry.getId(), "Test");
+        tagDao.delete(tag.getId());
+        final List<Tag> expected = Collections.emptyList();
         final List<Tag> actual = tagDao.readForEntry(entry.getId());
         assertEquals(expected, actual);
     }

@@ -34,6 +34,8 @@ public interface TagDao extends LongKeyDao<Tag> {
      */
     public Tag map(long entryId, String tagName);
 
+    public List<Tag> map(long entryId, List<Tag> tags);
+
     /**
      * Read the row in the Tag table that matches the given name.
      * 
@@ -49,5 +51,7 @@ public interface TagDao extends LongKeyDao<Tag> {
      *         match.
      */
     public List<Tag> readForEntry(long entryId);
+
+    public void delete(long id);
 
 }

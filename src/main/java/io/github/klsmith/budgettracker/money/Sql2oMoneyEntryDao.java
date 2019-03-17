@@ -96,4 +96,45 @@ public class Sql2oMoneyEntryDao extends Sql2oDao implements MoneyEntryDao {
         return results;
     }
 
+    @Override
+    public Optional<MoneyEntry> update(long id, MoneyEntry moneyEntryData) {
+        return transaction(connection -> update(connection, id, moneyEntryData));
+    }
+
+    /**
+     * Uses an existing connection instead of creating a new one.
+     * 
+     * @see Sql2oMoneyEntryDao#update(long, MoneyEntry)
+     */
+    public Optional<MoneyEntry> update(Connection connection, long id, MoneyEntry moneyEntryData) {
+        connection.createQuery("UPDATE MoneyEntry SET amount = :amountParam, date = :dateParam WHERE id = :idParam;")
+                .addParameter("amountParam", moneyEntryData.getAmount().toString())
+                .addParameter("dateParam", moneyEntryData.getDate())
+                .addParameter("idParam", id)
+                .executeUpdate();
+        for (Tag tag : moneyEntryData.getTags()) {
+            tagDao.map(connection, id, tag.getName());
+        }
+        return read(connection, id);
+    }
+
+    @Override
+    public void delete(long id) {
+        transaction(connection -> {
+            delete(connection, id);
+            return null;
+        });
+    }
+
+    /**
+     * Uses an existing connection instead of creating a new one.
+     * 
+     * @see Sql2oMoneyEntryDao#update(long, MoneyEntry)
+     */
+    public void delete(Connection connection, long id) {
+        connection.createQuery("DELETE FROM MoneyEntry WHERE id = :idParam;")
+                .addParameter("idParam", id)
+                .executeUpdate();
+    }
+
 }

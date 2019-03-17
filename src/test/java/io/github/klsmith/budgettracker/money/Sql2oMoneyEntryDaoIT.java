@@ -19,40 +19,66 @@ class Sql2oMoneyEntryDaoIT extends Sql2oDaoIntegration {
 
     private final Sql2oTagDao tagDao = new Sql2oTagDao(getSql2o());
     private final Sql2oMoneyEntryDao moneyEntryDao = new Sql2oMoneyEntryDao(getSql2o(), tagDao);
-    private MoneyEntryBuilder builder;
+    private MoneyEntry testEntry;
 
     @BeforeEach
     void setupBuilder() {
-        builder = MoneyEntry.builder()
+        testEntry = MoneyEntry.builder()
                 .withId(1)
                 .withAmount(new BigDecimal("100.0000"))
                 .withDate(LocalDate.of(1993, 8, 31))
                 .withTag(Tag.builder()
                         .withId(1)
                         .withName("Food")
-                        .build());
+                        .build())
+                .build();
     }
 
     @Test
     void testCreateSimple() {
-        final MoneyEntry expected = builder.build();
-        final MoneyEntry actual = moneyEntryDao.create(builder.build());
+        final MoneyEntry expected = testEntry;
+        final MoneyEntry actual = moneyEntryDao.create(testEntry);
         assertEquals(expected, actual);
     }
 
     @Test
     void testReadById() {
-        moneyEntryDao.create(builder.build());
-        final Optional<MoneyEntry> expected = Optional.of(builder.build());
-        final Optional<MoneyEntry> actual = moneyEntryDao.read(builder.getId());
+        moneyEntryDao.create(testEntry);
+        final Optional<MoneyEntry> expected = Optional.of(testEntry);
+        final Optional<MoneyEntry> actual = moneyEntryDao.read(testEntry.getId());
         assertEquals(expected, actual);
     }
 
     @Test
     void testReadByDate() {
-        moneyEntryDao.create(builder.build());
-        final List<MoneyEntry> expected = Arrays.asList(builder.build());
-        final List<MoneyEntry> actual = moneyEntryDao.read(builder.getDate());
+        moneyEntryDao.create(testEntry);
+        final List<MoneyEntry> expected = Arrays.asList(testEntry);
+        final List<MoneyEntry> actual = moneyEntryDao.read(testEntry.getDate());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testUpdate() {
+        moneyEntryDao.create(testEntry);
+        final MoneyEntry newTestData = testEntry.asBuilder()
+                .withAmount(new BigDecimal("120.0000"))
+                .withDate(LocalDate.of(2018, 3, 16))
+                .withTag(Tag.builder()
+                        .withId(2)
+                        .withName("Test")
+                        .build())
+                .build();
+        final Optional<MoneyEntry> expected = Optional.of(newTestData);
+        final Optional<MoneyEntry> actual = moneyEntryDao.update(testEntry.getId(), newTestData);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testDelete() {
+        moneyEntryDao.create(testEntry);
+        moneyEntryDao.delete(testEntry.getId());
+        final Optional<MoneyEntry> expected = Optional.empty();
+        final Optional<MoneyEntry> actual = moneyEntryDao.read(testEntry.getId());
         assertEquals(expected, actual);
     }
 
