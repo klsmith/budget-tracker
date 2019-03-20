@@ -18,7 +18,7 @@ import io.github.klsmith.budgettracker.tag.Tag;
  */
 public class Sql2oMoneyEntryDao extends Sql2oDao implements MoneyEntryDao {
 
-    public final Sql2oTagDao tagDao;
+    private final Sql2oTagDao tagDao;
 
     /**
      * Construct using Sql2o object and Sql2oTagDao.
