@@ -29,9 +29,9 @@ public abstract class Sql2oDaoIntegration {
     protected void setupDatabase() throws ManagedProcessException {
         database.setup();
         constructor.transaction(connection -> {
-            constructor.setupMoneyEntryTable(connection);
+            constructor.setupExpenseTable(connection);
             constructor.setupTagTable(connection);
-            constructor.setupTagMoneyEntryMapTable(connection);
+            constructor.setupTagExpenseMapTable(connection);
             return null;
         });
     }

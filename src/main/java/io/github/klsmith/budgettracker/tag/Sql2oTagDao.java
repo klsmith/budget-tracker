@@ -57,8 +57,8 @@ public class Sql2oTagDao extends Sql2oDao implements TagDao {
     }
 
     @Override
-    public Tag map(long entryId, String tagName) {
-        return transaction(connection -> map(connection, entryId, tagName));
+    public Tag map(long expenseId, String tagName) {
+        return transaction(connection -> map(connection, expenseId, tagName));
     }
 
     /**
@@ -66,26 +66,26 @@ public class Sql2oTagDao extends Sql2oDao implements TagDao {
      * 
      * @see Sql2oTagDao#map(long, String)
      */
-    public Tag map(Connection connection, long entryId, String tagName) {
+    public Tag map(Connection connection, long expenseId, String tagName) {
         final Tag tag = read(connection, tagName)
                 .orElseGet(() -> create(connection, tagName));
-        connection.createQuery("INSERT IGNORE INTO TagMoneyEntry "
-                + "(tagId, moneyEntryId) VALUES (:tagIdParam, :entryIdParam);")
+        connection.createQuery("INSERT IGNORE INTO TagExpense "
+                + "(tagId, expenseId) VALUES (:tagIdParam, :expenseIdParam);")
                 .addParameter("tagIdParam", tag.getId())
-                .addParameter("entryIdParam", entryId)
+                .addParameter("expenseIdParam", expenseId)
                 .executeUpdate();
         return tag;
     }
 
     @Override
-    public List<Tag> map(long entryId, List<Tag> tags) {
-        return transaction(connection -> map(connection, entryId, tags));
+    public List<Tag> map(long expenseId, List<Tag> tags) {
+        return transaction(connection -> map(connection, expenseId, tags));
     }
 
-    public List<Tag> map(Connection connection, long entryId, List<Tag> tags) {
+    public List<Tag> map(Connection connection, long expenseId, List<Tag> tags) {
         final List<Tag> results = new ArrayList<>();
         for (Tag tag : tags) {
-            final Tag newTag = map(connection, entryId, tag.getName());
+            final Tag newTag = map(connection, expenseId, tag.getName());
             results.add(newTag);
         }
         return results;
@@ -128,20 +128,20 @@ public class Sql2oTagDao extends Sql2oDao implements TagDao {
     }
 
     @Override
-    public List<Tag> readForEntry(long entryId) {
-        return transaction(connection -> readForEntry(connection, entryId));
+    public List<Tag> readForExpense(long expenseId) {
+        return transaction(connection -> readForExpense(connection, expenseId));
     }
 
     /**
      * Uses an existing connection instead of creating a new one.
      * 
-     * @see Sql2oTagDao#readForEntry(long)
+     * @see Sql2oTagDao#readForExpense(long)
      */
-    public List<Tag> readForEntry(Connection connection, long entryId) {
+    public List<Tag> readForExpense(Connection connection, long expenseId) {
         return connection.createQuery("SELECT Tag.id, Tag.name FROM Tag\n"
-                + "JOIN TagMoneyEntry ON TagMoneyEntry.tagId = Tag.id\n"
-                + "WHERE TagMoneyEntry.moneyEntryId = :entryIdParam;")
-                .addParameter("entryIdParam", entryId)
+                + "JOIN TagExpense ON TagExpense.tagId = Tag.id\n"
+                + "WHERE TagExpense.expenseId = :expenseIdParam;")
+                .addParameter("expenseIdParam", expenseId)
                 .executeAndFetch(TagBuilder.class)
                 .stream()
                 .map(TagBuilder::build)

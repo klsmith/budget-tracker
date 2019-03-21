@@ -2,16 +2,16 @@ package io.github.klsmith.budgettracker.web;
 
 import java.util.Objects;
 
-import io.github.klsmith.budgettracker.money.MoneyEntryDao;
+import io.github.klsmith.budgettracker.money.ExpenseDao;
 import io.github.klsmith.budgettracker.tag.TagDao;
 
 public class AppContext {
 
-    private final MoneyEntryDao moneyEntryDao;
+    private final ExpenseDao expenseDao;
     private final TagDao tagDao;
 
     AppContext(AppContextBuilder builder) {
-        moneyEntryDao = Objects.requireNonNull(builder.getMoneyEntryDao());
+        expenseDao = Objects.requireNonNull(builder.getExpenseDao());
         tagDao = Objects.requireNonNull(builder.getTagDao());
     }
 
@@ -19,8 +19,8 @@ public class AppContext {
         return new AppContextBuilder();
     }
 
-    public MoneyEntryDao getMoneyEntryDao() {
-        return moneyEntryDao;
+    public ExpenseDao getExpenseDao() {
+        return expenseDao;
     }
 
     public TagDao getTagDao() {

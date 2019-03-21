@@ -2,27 +2,28 @@ package io.github.klsmith.budgettracker.web;
 
 import java.util.Objects;
 
-import io.github.klsmith.budgettracker.money.MoneyEntryDao;
+import io.github.klsmith.budgettracker.money.ExpenseDao;
 import io.github.klsmith.budgettracker.tag.TagDao;
 
 public class AppContextBuilder {
 
-    private MoneyEntryDao moneyEntryDao;
+    private ExpenseDao expenseDao;
     private TagDao tagDao;
 
     AppContextBuilder() {
-        moneyEntryDao = null;
+        expenseDao = null;
         tagDao = null;
     }
 
-    public AppContextBuilder withMoneyEntryDao(MoneyEntryDao moneyEntryDao) {
-        this.moneyEntryDao = Objects.requireNonNull(moneyEntryDao,
-                "Cannot have a null MoneyEntryDao.");
+    public AppContextBuilder withExpenseDao(ExpenseDao expenseDao) {
+        this.expenseDao = Objects.requireNonNull(expenseDao,
+                String.format("Cannot have a null %s.",
+                        ExpenseDao.class.getSimpleName()));
         return this;
     }
 
-    public MoneyEntryDao getMoneyEntryDao() {
-        return moneyEntryDao;
+    public ExpenseDao getExpenseDao() {
+        return expenseDao;
     }
 
     public AppContextBuilder withTagDao(TagDao tagDao) {
@@ -36,8 +37,9 @@ public class AppContextBuilder {
     }
 
     public AppContext build() {
-        Objects.requireNonNull(moneyEntryDao,
-                "Cannot build because the MoneyEntryDao has not been set.");
+        Objects.requireNonNull(expenseDao,
+                String.format("Cannot build because the %s has not been set.",
+                        ExpenseDao.class.getSimpleName()));
         Objects.requireNonNull(tagDao,
                 "Cannot build because the TagDao has not been set.");
         return new AppContext(this);
