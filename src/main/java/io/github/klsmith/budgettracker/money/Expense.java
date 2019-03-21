@@ -10,40 +10,40 @@ import java.util.Objects;
 import io.github.klsmith.budgettracker.tag.Tag;
 
 /**
- * Represents some exchange of money on a specific date, associated to some
- * arbitrary amount of tags.
+ * Represents a loss of money on a specific date, associated to some arbitrary
+ * amount of tags.
  */
-public class MoneyEntry {
+public class Expense {
 
     private final long id;
     private final BigDecimal amount;
     private final LocalDate date;
     private final List<Tag> tags;
 
-    MoneyEntry(MoneyEntryBuilder builder) {
+    Expense(ExpenseBuilder builder) {
         id = builder.getId();
         amount = Objects.requireNonNull(builder.getAmount());
         date = Objects.requireNonNull(builder.getDate());
         tags = Collections.unmodifiableList(new ArrayList<>(builder.getTags()));
     }
 
-    public static MoneyEntryBuilder builder() {
-        return new MoneyEntryBuilder();
+    public static ExpenseBuilder builder() {
+        return new ExpenseBuilder();
     }
 
-    public MoneyEntryBuilder asBuilder() {
-        return new MoneyEntryBuilder(this);
+    public ExpenseBuilder asBuilder() {
+        return new ExpenseBuilder(this);
     }
 
     /**
-     * @return a unique {@link MoneyEntry} identifier.
+     * @return a unique {@link Expense} identifier.
      */
     public long getId() {
         return id;
     }
 
     /**
-     * @return the amount of money exchanged.
+     * @return the amount of money lost.
      */
     public BigDecimal getAmount() {
         return amount;
@@ -69,13 +69,13 @@ public class MoneyEntry {
     }
 
     /**
-     * @return true if the object is a MoneyEntry and all fields are equal;
+     * @return true if the object is a {@link Expense} and all fields are equal;
      *         otherwise, false.
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof MoneyEntry) {
-            final MoneyEntry other = (MoneyEntry) obj;
+        if (obj instanceof Expense) {
+            final Expense other = (Expense) obj;
             return id == other.id
                     && Objects.equals(amount, other.amount)
                     && date.isEqual(other.date)

@@ -12,14 +12,14 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.github.klsmith.budgettracker.money.MoneyEntry;
-import io.github.klsmith.budgettracker.money.Sql2oMoneyEntryDao;
+import io.github.klsmith.budgettracker.money.Expense;
+import io.github.klsmith.budgettracker.money.Sql2oExpenseDao;
 import io.github.klsmith.budgettracker.sql2o.Sql2oDaoIntegration;
 
 class Sql2oTagDaoIT extends Sql2oDaoIntegration {
 
     private final Sql2oTagDao tagDao = new Sql2oTagDao(getSql2o());
-    private final Sql2oMoneyEntryDao moneyEntryDao = new Sql2oMoneyEntryDao(getSql2o(), tagDao);
+    private final Sql2oExpenseDao expenseDao = new Sql2oExpenseDao(getSql2o(), tagDao);
     private Tag testTag;
 
     @BeforeEach
@@ -61,15 +61,15 @@ class Sql2oTagDaoIT extends Sql2oDaoIntegration {
     }
 
     @Test
-    void testMapByMoneyEntry() {
-        final MoneyEntry entry = moneyEntryDao.create(MoneyEntry.builder()
+    void testMapByExpense() {
+        final Expense expense = expenseDao.create(Expense.builder()
                 .withAmount(new BigDecimal("50.0000"))
                 .withDate(LocalDate.of(1993, 8, 31))
                 .build());
-        final Tag tagA = tagDao.map(entry.getId(), "Test");
-        final Tag tagB = tagDao.map(entry.getId(), "Test2");
+        final Tag tagA = tagDao.map(expense.getId(), "Test");
+        final Tag tagB = tagDao.map(expense.getId(), "Test2");
         final List<Tag> expected = Arrays.asList(tagA, tagB);
-        final List<Tag> actual = tagDao.readForEntry(entry.getId());
+        final List<Tag> actual = tagDao.readForExpense(expense.getId());
         assertEquals(expected, actual);
     }
 
@@ -85,14 +85,14 @@ class Sql2oTagDaoIT extends Sql2oDaoIntegration {
 
     @Test
     void testDeleteRemovesMapping() {
-        final MoneyEntry entry = moneyEntryDao.create(MoneyEntry.builder()
+        final Expense expense = expenseDao.create(Expense.builder()
                 .withAmount(new BigDecimal("50.0000"))
                 .withDate(LocalDate.of(1993, 8, 31))
                 .build());
-        final Tag tag = tagDao.map(entry.getId(), "Test");
+        final Tag tag = tagDao.map(expense.getId(), "Test");
         tagDao.delete(tag.getId());
         final List<Tag> expected = Collections.emptyList();
-        final List<Tag> actual = tagDao.readForEntry(entry.getId());
+        final List<Tag> actual = tagDao.readForExpense(expense.getId());
         assertEquals(expected, actual);
     }
 

@@ -15,27 +15,29 @@ import spark.Request;
 import spark.Response;
 import spark.Service;
 
-public class MoneyEntryController {
+public class ExpenseController {
 
-    private static final Logger logger = LoggerFactory.getLogger(MoneyEntryController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExpenseController.class);
 
     private static final String ID_PARAM = ":idParam";
     private static final String RESPONSE_TYPE_APPLICATION_JSON = "application/json";
 
-    private final MoneyEntryService service;
+    private final ExpenseService service;
 
-    public MoneyEntryController(MoneyEntryService service) {
-        this.service = Objects.requireNonNull(service, "Cannot have a null MoneyEntryService.");
+    public ExpenseController(ExpenseService service) {
+        this.service = Objects.requireNonNull(service,
+                String.format("Cannot have a null %s.",
+                        ExpenseService.class.getSimpleName()));
     }
 
     public void route(Service spark) {
-        spark.post("/api/money/entry", this::postMoneyEntry);
-        spark.get("/api/money/entry/" + ID_PARAM, this::getMoneyEntryById);
-        spark.put("/api/money/entry/" + ID_PARAM, this::putMoneyEntryById);
-        spark.delete("/api/money/entry/" + ID_PARAM, this::deleteMoneyEntryById);
+        spark.post("/api/money/expense", this::postExpense);
+        spark.get("/api/money/expense/" + ID_PARAM, this::getExpenseById);
+        spark.put("/api/money/expense/" + ID_PARAM, this::putExpenseById);
+        spark.delete("/api/money/expense/" + ID_PARAM, this::deleteExpenseById);
     }
 
-    public String postMoneyEntry(Request request, Response response) {
+    public String postExpense(Request request, Response response) {
         response.type(RESPONSE_TYPE_APPLICATION_JSON);
         return parseJson(request.body())
                 .map(service::create)
@@ -43,46 +45,49 @@ public class MoneyEntryController {
                 .orElseThrow(RuntimeException::new);
     }
 
-    public String getMoneyEntryById(Request request, Response response) {
+    public String getExpenseById(Request request, Response response) {
         response.type(RESPONSE_TYPE_APPLICATION_JSON);
         final long id = Long.parseLong(request.params(ID_PARAM));
         return service.find(id)
                 .map(this::toJson)
                 .orElseGet(() -> {
                     response.status(404);
-                    return "{ \"message\"=\"Cannot find MoneyEntry with id=" + id + "\" }";
+                    return String.format("{ \"message\"=\"Cannot find %s with id=%s\" }",
+                            Expense.class.getSimpleName(), Long.valueOf(id));
                 });
     }
 
-    public String putMoneyEntryById(Request request, Response response) {
+    public String putExpenseById(Request request, Response response) {
         response.type(RESPONSE_TYPE_APPLICATION_JSON);
         final long id = Long.parseLong(request.params(ID_PARAM));
         return parseJson(request.body())
-                .flatMap(entry -> service.update(id, entry))
+                .flatMap(expense -> service.update(id, expense))
                 .map(this::toJson)
                 .orElseGet(() -> {
                     response.status(404);
-                    return "{ \"message\"=\"Cannot find MoneyEntry with id=" + id + "\" }";
+                    return String.format("{ \"message\"=\"Cannot find %s with id=%s\" }",
+                            Expense.class.getSimpleName(), Long.valueOf(id));
                 });
     }
 
-    public String deleteMoneyEntryById(Request request, Response response) {
+    public String deleteExpenseById(Request request, Response response) {
         response.type(RESPONSE_TYPE_APPLICATION_JSON);
         final long id = Long.parseLong(request.params(ID_PARAM));
         service.delete(id);
-        return "{ \"message\"=\"Successfully deleted MoneyEntry with id=" + id + "\" }";
+        return String.format("{ \"message\"=\"Successfully deleted %s with id=%s\" }",
+                Expense.class.getSimpleName(), Long.valueOf(id));
     }
 
-    private String toJson(MoneyEntry entry) {
-        return new Gson().toJson(entry);
+    private String toJson(Expense expense) {
+        return new Gson().toJson(expense);
     }
 
-    private Optional<MoneyEntry> parseJson(String json) {
+    private Optional<Expense> parseJson(String json) {
         try {
             final JsonObject root = new JsonParser()
                     .parse(json)
                     .getAsJsonObject();
-            final MoneyEntryBuilder builder = MoneyEntry.builder();
+            final ExpenseBuilder builder = Expense.builder();
             builder.withAmount(root.get("amount").getAsBigDecimal());
             final JsonObject dateObj = root.get("date").getAsJsonObject();
             builder.withDate(LocalDate.of(
@@ -96,7 +101,7 @@ public class MoneyEntryController {
             return Optional.of(builder.build());
         }
         catch (RuntimeException e) {
-            logger.warn("Error parsing MoneyEntry", e);
+            logger.warn("Error parsing {}", Expense.class.getSimpleName(), e);
         }
         return Optional.empty();
     }

@@ -15,15 +15,15 @@ import io.github.klsmith.budgettracker.sql2o.Sql2oDaoIntegration;
 import io.github.klsmith.budgettracker.tag.Sql2oTagDao;
 import io.github.klsmith.budgettracker.tag.Tag;
 
-class Sql2oMoneyEntryDaoIT extends Sql2oDaoIntegration {
+class Sql2oExpenseDaoIT extends Sql2oDaoIntegration {
 
     private final Sql2oTagDao tagDao = new Sql2oTagDao(getSql2o());
-    private final Sql2oMoneyEntryDao moneyEntryDao = new Sql2oMoneyEntryDao(getSql2o(), tagDao);
-    private MoneyEntry testEntry;
+    private final Sql2oExpenseDao expenseDao = new Sql2oExpenseDao(getSql2o(), tagDao);
+    private Expense testExpense;
 
     @BeforeEach
     void setupBuilder() {
-        testEntry = MoneyEntry.builder()
+        testExpense = Expense.builder()
                 .withId(1)
                 .withAmount(new BigDecimal("100.0000"))
                 .withDate(LocalDate.of(1993, 8, 31))
@@ -36,31 +36,31 @@ class Sql2oMoneyEntryDaoIT extends Sql2oDaoIntegration {
 
     @Test
     void testCreateSimple() {
-        final MoneyEntry expected = testEntry;
-        final MoneyEntry actual = moneyEntryDao.create(testEntry);
+        final Expense expected = testExpense;
+        final Expense actual = expenseDao.create(testExpense);
         assertEquals(expected, actual);
     }
 
     @Test
     void testReadById() {
-        moneyEntryDao.create(testEntry);
-        final Optional<MoneyEntry> expected = Optional.of(testEntry);
-        final Optional<MoneyEntry> actual = moneyEntryDao.read(testEntry.getId());
+        expenseDao.create(testExpense);
+        final Optional<Expense> expected = Optional.of(testExpense);
+        final Optional<Expense> actual = expenseDao.read(testExpense.getId());
         assertEquals(expected, actual);
     }
 
     @Test
     void testReadByDate() {
-        moneyEntryDao.create(testEntry);
-        final List<MoneyEntry> expected = Arrays.asList(testEntry);
-        final List<MoneyEntry> actual = moneyEntryDao.read(testEntry.getDate());
+        expenseDao.create(testExpense);
+        final List<Expense> expected = Arrays.asList(testExpense);
+        final List<Expense> actual = expenseDao.read(testExpense.getDate());
         assertEquals(expected, actual);
     }
 
     @Test
     void testUpdate() {
-        moneyEntryDao.create(testEntry);
-        final MoneyEntry newTestData = testEntry.asBuilder()
+        expenseDao.create(testExpense);
+        final Expense newTestData = testExpense.asBuilder()
                 .withAmount(new BigDecimal("120.0000"))
                 .withDate(LocalDate.of(2018, 3, 16))
                 .withTag(Tag.builder()
@@ -68,17 +68,17 @@ class Sql2oMoneyEntryDaoIT extends Sql2oDaoIntegration {
                         .withName("Test")
                         .build())
                 .build();
-        final Optional<MoneyEntry> expected = Optional.of(newTestData);
-        final Optional<MoneyEntry> actual = moneyEntryDao.update(testEntry.getId(), newTestData);
+        final Optional<Expense> expected = Optional.of(newTestData);
+        final Optional<Expense> actual = expenseDao.update(testExpense.getId(), newTestData);
         assertEquals(expected, actual);
     }
 
     @Test
     void testDelete() {
-        moneyEntryDao.create(testEntry);
-        moneyEntryDao.delete(testEntry.getId());
-        final Optional<MoneyEntry> expected = Optional.empty();
-        final Optional<MoneyEntry> actual = moneyEntryDao.read(testEntry.getId());
+        expenseDao.create(testExpense);
+        expenseDao.delete(testExpense.getId());
+        final Optional<Expense> expected = Optional.empty();
+        final Optional<Expense> actual = expenseDao.read(testExpense.getId());
         assertEquals(expected, actual);
     }
 

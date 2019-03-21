@@ -48,7 +48,8 @@ public class TagController {
                     .map(this::toJson)
                     .orElseGet(() -> {
                         response.status(404);
-                        return "{ \"message\"=\"Cannot find MoneyEntry with id=" + id + "\" }";
+                        return String.format("{ \"message\"=\"Cannot find %s with id=%s\" }",
+                                Tag.class.getSimpleName(), Long.valueOf(id));
                     });
         }
         catch (NumberFormatException e) {
@@ -58,7 +59,8 @@ public class TagController {
                 .map(this::toJson)
                 .orElseGet(() -> {
                     response.status(404);
-                    return "{ \"message\"=\"Cannot find MoneyEntry with name=" + param + "\" }";
+                    return String.format("{ \"message\"=\"Cannot find %s with name=%s\" }",
+                            Tag.class.getSimpleName(), Long.valueOf(param));
                 });
     }
 

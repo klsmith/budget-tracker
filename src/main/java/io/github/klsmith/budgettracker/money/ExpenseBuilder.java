@@ -9,21 +9,21 @@ import java.util.Objects;
 
 import io.github.klsmith.budgettracker.tag.Tag;
 
-public class MoneyEntryBuilder {
+public class ExpenseBuilder {
 
     private long id;
     private BigDecimal amount;
     private LocalDate date;
     private final List<Tag> tags;
-    
-    MoneyEntryBuilder(MoneyEntry entry) {
-        this(entry.getId(),
-                entry.getAmount(),
-                entry.getDate(),
-                entry.getTags());
+
+    ExpenseBuilder(Expense expense) {
+        this(expense.getId(),
+                expense.getAmount(),
+                expense.getDate(),
+                expense.getTags());
     }
 
-    MoneyEntryBuilder(long id, BigDecimal amount, LocalDate date, List<Tag> tags) {
+    ExpenseBuilder(long id, BigDecimal amount, LocalDate date, List<Tag> tags) {
         this();
         withId(id);
         withAmount(amount);
@@ -31,14 +31,14 @@ public class MoneyEntryBuilder {
         withTags(tags);
     }
 
-    MoneyEntryBuilder() {
+    ExpenseBuilder() {
         this.id = -1;
         this.amount = null;
         this.date = null;
         this.tags = new ArrayList<>();
     }
 
-    public MoneyEntryBuilder withId(long id) {
+    public ExpenseBuilder withId(long id) {
         this.id = id;
         return this;
     }
@@ -47,7 +47,7 @@ public class MoneyEntryBuilder {
         return id;
     }
 
-    public MoneyEntryBuilder withAmount(BigDecimal amount) {
+    public ExpenseBuilder withAmount(BigDecimal amount) {
         this.amount = Objects.requireNonNull(amount, "Cannot have a null amount.");
         return this;
     }
@@ -56,7 +56,7 @@ public class MoneyEntryBuilder {
         return amount;
     }
 
-    public MoneyEntryBuilder withDate(LocalDate date) {
+    public ExpenseBuilder withDate(LocalDate date) {
         this.date = Objects.requireNonNull(date, "Cannot have a null date.");
         return this;
     }
@@ -65,18 +65,18 @@ public class MoneyEntryBuilder {
         return date;
     }
 
-    public MoneyEntryBuilder withTag(String tagName) {
+    public ExpenseBuilder withTag(String tagName) {
         return withTag(Tag.builder()
                 .withName(tagName)
                 .build());
     }
 
-    public MoneyEntryBuilder withTag(Tag tag) {
+    public ExpenseBuilder withTag(Tag tag) {
         this.tags.add(Objects.requireNonNull(tag, "Cannot have a null tag"));
         return this;
     }
 
-    public MoneyEntryBuilder withTags(List<Tag> tags) {
+    public ExpenseBuilder withTags(List<Tag> tags) {
         if (null != tags) {
             for (Tag tag : tags) {
                 withTag(tag);
@@ -85,7 +85,7 @@ public class MoneyEntryBuilder {
         return this;
     }
 
-    public MoneyEntryBuilder removeTag(Tag tag) {
+    public ExpenseBuilder removeTag(Tag tag) {
         if (null != tag) {
             this.tags.remove(tag);
         }
@@ -96,10 +96,10 @@ public class MoneyEntryBuilder {
         return Collections.unmodifiableList(tags);
     }
 
-    public MoneyEntry build() {
+    public Expense build() {
         Objects.requireNonNull(amount, "Cannot build because amount has not been set.");
         Objects.requireNonNull(date, "Cannot build because date has not been set.");
-        return new MoneyEntry(this);
+        return new Expense(this);
     }
 
 }

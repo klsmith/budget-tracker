@@ -28,13 +28,13 @@ public interface TagDao extends LongKeyDao<Tag> {
     public Tag create(String tagName);
 
     /**
-     * Associate the given tag name to the given entry id.<br/>
+     * Associate the given tag name to the given {@link Expense} id.<br/>
      * 
      * @return the Tag object that was mapped.
      */
-    public Tag map(long entryId, String tagName);
+    public Tag map(long expenseId, String tagName);
 
-    public List<Tag> map(long entryId, List<Tag> tags);
+    public List<Tag> map(long expenseId, List<Tag> tags);
 
     /**
      * Read the row in the Tag table that matches the given name.
@@ -45,12 +45,13 @@ public interface TagDao extends LongKeyDao<Tag> {
     public Optional<Tag> read(String tagName);
 
     /**
-     * Read all of the rows in the Tag table that are mapped to the given entry id.
+     * Read all of the rows in the Tag table that are mapped to the given
+     * {@link Expense} id.
      * 
      * @return a list containing the row data, or an empty list if none of the rows
      *         match.
      */
-    public List<Tag> readForEntry(long entryId);
+    public List<Tag> readForExpense(long expenseId);
 
     public void delete(long id);
 

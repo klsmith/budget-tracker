@@ -122,19 +122,19 @@ public class DatabaseSchemaConstructor extends Sql2oDao {
 
     public void setupFullSchema() {
         transaction(connection -> {
-            setupMoneyEntryTable(connection);
+            setupExpenseTable(connection);
             setupTagTable(connection);
-            setupTagMoneyEntryMapTable(connection);
+            setupTagExpenseMapTable(connection);
             return null;
         });
     }
 
     /**
-     * Create the MoneyEntry table schema.
+     * Create the {@link Expense} table schema.
      */
-    public void setupMoneyEntryTable(Connection connection) {
+    public void setupExpenseTable(Connection connection) {
         try (final Query query = connection.createQuery(
-                "CREATE TABLE MoneyEntry ("
+                "CREATE TABLE Expense ("
                         + "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,"
                         + "date DATE NOT NULL,"
                         + "amount DECIMAL(13, 4) NOT NULL,"
@@ -157,14 +157,14 @@ public class DatabaseSchemaConstructor extends Sql2oDao {
     }
 
     /**
-     * Create the TagMoneyEntry table schema.
+     * Create the TagExpense table schema.
      */
-    public void setupTagMoneyEntryMapTable(Connection connection) {
+    public void setupTagExpenseMapTable(Connection connection) {
         try (final Query query = connection.createQuery(
-                "CREATE TABLE TagMoneyEntry ("
+                "CREATE TABLE TagExpense ("
                         + "tagId BIGINT UNSIGNED NOT NULL,"
-                        + "moneyEntryId BIGINT UNSIGNED NOT NULL,"
-                        + "PRIMARY KEY(tagId, moneyEntryId));")) {
+                        + "expenseId BIGINT UNSIGNED NOT NULL,"
+                        + "PRIMARY KEY(tagId, expenseId));")) {
             query.executeUpdate();
         }
     }
