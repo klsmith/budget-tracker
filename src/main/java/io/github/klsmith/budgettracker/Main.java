@@ -2,9 +2,9 @@ package io.github.klsmith.budgettracker;
 
 import org.sql2o.Sql2o;
 
-import io.github.klsmith.budgettracker.money.ExpenseController;
-import io.github.klsmith.budgettracker.money.ExpenseService;
-import io.github.klsmith.budgettracker.money.Sql2oExpenseDao;
+import io.github.klsmith.budgettracker.money.expense.ExpenseController;
+import io.github.klsmith.budgettracker.money.expense.ExpenseService;
+import io.github.klsmith.budgettracker.money.expense.Sql2oExpenseDao;
 import io.github.klsmith.budgettracker.tag.Sql2oTagDao;
 import io.github.klsmith.budgettracker.web.AppContext;
 import spark.Service;

@@ -2,7 +2,7 @@ package io.github.klsmith.budgettracker.web;
 
 import java.util.Objects;
 
-import io.github.klsmith.budgettracker.money.ExpenseDao;
+import io.github.klsmith.budgettracker.money.expense.ExpenseDao;
 import io.github.klsmith.budgettracker.tag.TagDao;
 
 public class AppContextBuilder {

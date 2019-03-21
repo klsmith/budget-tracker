@@ -11,6 +11,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import io.github.klsmith.budgettracker.money.expense.Expense;
+import io.github.klsmith.budgettracker.money.expense.Sql2oExpenseDao;
 import io.github.klsmith.budgettracker.sql2o.Sql2oDaoIntegration;
 import io.github.klsmith.budgettracker.tag.Sql2oTagDao;
 import io.github.klsmith.budgettracker.tag.Tag;
