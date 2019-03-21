@@ -1,4 +1,4 @@
-package io.github.klsmith.budgettracker.money;
+package io.github.klsmith.budgettracker.money.expense;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
