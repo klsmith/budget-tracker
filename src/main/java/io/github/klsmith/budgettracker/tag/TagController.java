@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
-import io.github.klsmith.budgettracker.money.Expense;
 import spark.Request;
 import spark.Response;
 import spark.Service;
