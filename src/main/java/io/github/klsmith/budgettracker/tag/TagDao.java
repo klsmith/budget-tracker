@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import io.github.klsmith.budgettracker.dao.LongKeyDao;
+import io.github.klsmith.budgettracker.money.expense.Expense;
+import io.github.klsmith.budgettracker.money.income.Income;
 
 /**
  * All of the database operations required for Tag.
@@ -52,6 +54,15 @@ public interface TagDao extends LongKeyDao<Tag> {
      *         match.
      */
     public List<Tag> readForExpense(long expenseId);
+
+    /**
+     * Read all of the rows in the Tag table that are mapped to the given
+     * {@link Income} id.
+     * 
+     * @return a list containing the row data, or an empty list if none of the rows
+     *         match.
+     */
+    public List<Tag> readForIncome(long incomeId);
 
     public void delete(long id);
 
