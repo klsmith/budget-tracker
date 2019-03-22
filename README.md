@@ -93,8 +93,8 @@ To create an application that is able to keep track of a budget. It should be ve
 - [x] Integration Tests
 
 ### Week 3 (3/15 - 3/22)
-- [ ] Track Income In Database:
-	- [ ] Date Earned
+- [x] Track Income In Database:
+	- [x] Date Earned
 - [ ] Track Budget Limits
 	- [ ] by Category
 	- [ ] by Date
