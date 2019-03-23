@@ -1,4 +1,4 @@
-package io.github.klsmith.budgettracker.money;
+package io.github.klsmith.budgettracker.money.expense;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

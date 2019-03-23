@@ -1,4 +1,4 @@
-package io.github.klsmith.budgettracker.money;
+package io.github.klsmith.budgettracker.money.expense;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class Sql2oExpenseDao extends Sql2oDao implements ExpenseDao {
                 .executeUpdate();
         final long id = getLastInsertId(connection);
         for (Tag tag : expenseData.getTags()) {
-            tagDao.map(connection, id, tag.getName());
+            tagDao.mapExpense(connection, id, tag.getName());
         }
         return read(connection, id)
                 .orElseThrow(() -> new DaoException("Could not read row immediately after creation."));
@@ -113,7 +113,7 @@ public class Sql2oExpenseDao extends Sql2oDao implements ExpenseDao {
                 .addParameter("idParam", id)
                 .executeUpdate();
         for (Tag tag : expenseData.getTags()) {
-            tagDao.map(connection, id, tag.getName());
+            tagDao.mapExpense(connection, id, tag.getName());
         }
         return read(connection, id);
     }

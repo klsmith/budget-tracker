@@ -15,10 +15,7 @@ public abstract class Sql2oDaoIntegration {
     private final DatabaseSchemaConstructor constructor = new DatabaseSchemaConstructor(sql2o);
 
     private Sql2o createSql2o() {
-        return new Sql2o(
-                database.getUrl(),
-                database.getUser(),
-                database.getPass());
+        return new Sql2o(database.getUrl(), database.getUser(), database.getPass());
     }
 
     protected final Sql2o getSql2o() {
@@ -28,12 +25,7 @@ public abstract class Sql2oDaoIntegration {
     @BeforeEach
     protected void setupDatabase() throws ManagedProcessException {
         database.setup();
-        constructor.transaction(connection -> {
-            constructor.setupExpenseTable(connection);
-            constructor.setupTagTable(connection);
-            constructor.setupTagExpenseMapTable(connection);
-            return null;
-        });
+        constructor.setupFullSchema();
     }
 
     @AfterEach
