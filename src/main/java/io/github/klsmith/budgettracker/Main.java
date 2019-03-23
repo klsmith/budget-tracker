@@ -5,6 +5,7 @@ import org.sql2o.Sql2o;
 import io.github.klsmith.budgettracker.money.ExpenseController;
 import io.github.klsmith.budgettracker.money.ExpenseService;
 import io.github.klsmith.budgettracker.money.Sql2oExpenseDao;
+import io.github.klsmith.budgettracker.money.budget.Sql2oBudgetDao;
 import io.github.klsmith.budgettracker.tag.Sql2oTagDao;
 import io.github.klsmith.budgettracker.web.AppContext;
 import spark.Service;
@@ -24,9 +25,11 @@ public class Main {
                 "");
         final Sql2oTagDao tagDao = new Sql2oTagDao(sql2o);
         final Sql2oExpenseDao expenseDao = new Sql2oExpenseDao(sql2o, tagDao);
+        final Sql2oBudgetDao budgetDao = new Sql2oBudgetDao(sql2o, tagDao);
         final AppContext context = AppContext.builder()
                 .withExpenseDao(expenseDao)
                 .withTagDao(tagDao)
+                .withBudgetDao(budgetDao)
                 .build();
         final ExpenseService expenseService = new ExpenseService(context);
         final ExpenseController expenseController = new ExpenseController(expenseService);

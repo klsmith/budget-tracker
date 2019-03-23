@@ -28,12 +28,7 @@ public abstract class Sql2oDaoIntegration {
     @BeforeEach
     protected void setupDatabase() throws ManagedProcessException {
         database.setup();
-        constructor.transaction(connection -> {
-            constructor.setupExpenseTable(connection);
-            constructor.setupTagTable(connection);
-            constructor.setupTagExpenseMapTable(connection);
-            return null;
-        });
+        constructor.setupFullSchema();
     }
 
     @AfterEach

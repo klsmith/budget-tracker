@@ -66,8 +66,8 @@ class Sql2oTagDaoIT extends Sql2oDaoIntegration {
                 .withAmount(new BigDecimal("50.0000"))
                 .withDate(LocalDate.of(1993, 8, 31))
                 .build());
-        final Tag tagA = tagDao.map(expense.getId(), "Test");
-        final Tag tagB = tagDao.map(expense.getId(), "Test2");
+        final Tag tagA = tagDao.mapExpense(expense.getId(), "Test");
+        final Tag tagB = tagDao.mapExpense(expense.getId(), "Test2");
         final List<Tag> expected = Arrays.asList(tagA, tagB);
         final List<Tag> actual = tagDao.readForExpense(expense.getId());
         assertEquals(expected, actual);
@@ -89,7 +89,7 @@ class Sql2oTagDaoIT extends Sql2oDaoIntegration {
                 .withAmount(new BigDecimal("50.0000"))
                 .withDate(LocalDate.of(1993, 8, 31))
                 .build());
-        final Tag tag = tagDao.map(expense.getId(), "Test");
+        final Tag tag = tagDao.mapExpense(expense.getId(), "Test");
         tagDao.delete(tag.getId());
         final List<Tag> expected = Collections.emptyList();
         final List<Tag> actual = tagDao.readForExpense(expense.getId());

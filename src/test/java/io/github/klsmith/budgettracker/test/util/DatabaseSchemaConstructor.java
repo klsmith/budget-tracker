@@ -11,6 +11,7 @@ import org.sql2o.Query;
 import org.sql2o.Sql2o;
 
 import ch.vorburger.exec.ManagedProcessException;
+import io.github.klsmith.budgettracker.money.Expense;
 import io.github.klsmith.budgettracker.sql2o.Sql2oDao;
 
 /**
@@ -123,8 +124,10 @@ public class DatabaseSchemaConstructor extends Sql2oDao {
     public void setupFullSchema() {
         transaction(connection -> {
             setupExpenseTable(connection);
+            setupBudgetTable(connection);
             setupTagTable(connection);
             setupTagExpenseMapTable(connection);
+            setupTagBudgetMapTable(connection);
             return null;
         });
     }
@@ -137,6 +140,17 @@ public class DatabaseSchemaConstructor extends Sql2oDao {
                 "CREATE TABLE Expense ("
                         + "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,"
                         + "date DATE NOT NULL,"
+                        + "amount DECIMAL(13, 4) NOT NULL,"
+                        + "PRIMARY KEY(id));")) {
+            query.executeUpdate();
+        }
+    }
+
+    public void setupBudgetTable(Connection connection) {
+        try (final Query query = connection.createQuery(
+                "CREATE TABLE Budget ("
+                        + "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,"
+                        + "date DATE,"
                         + "amount DECIMAL(13, 4) NOT NULL,"
                         + "PRIMARY KEY(id));")) {
             query.executeUpdate();
@@ -165,6 +179,19 @@ public class DatabaseSchemaConstructor extends Sql2oDao {
                         + "tagId BIGINT UNSIGNED NOT NULL,"
                         + "expenseId BIGINT UNSIGNED NOT NULL,"
                         + "PRIMARY KEY(tagId, expenseId));")) {
+            query.executeUpdate();
+        }
+    }
+
+    /**
+     * Create the TagBudget table schema.
+     */
+    public void setupTagBudgetMapTable(Connection connection) {
+        try (final Query query = connection.createQuery(
+                "CREATE TABLE TagBudget ("
+                        + "tagId BIGINT UNSIGNED NOT NULL,"
+                        + "budgetId BIGINT UNSIGNED NOT NULL,"
+                        + "PRIMARY KEY(tagId, budgetId));")) {
             query.executeUpdate();
         }
     }
