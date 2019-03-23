@@ -1,4 +1,4 @@
-package io.github.klsmith.budgettracker.money;
+package io.github.klsmith.budgettracker.money.expense;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,15 +23,8 @@ class Sql2oExpenseDaoIT extends Sql2oDaoIntegration {
 
     @BeforeEach
     void setupBuilder() {
-        testExpense = Expense.builder()
-                .withId(1)
-                .withAmount(new BigDecimal("100.0000"))
-                .withDate(LocalDate.of(1993, 8, 31))
-                .withTag(Tag.builder()
-                        .withId(1)
-                        .withName("Food")
-                        .build())
-                .build();
+        testExpense = Expense.builder().withId(1).withAmount(new BigDecimal("100.0000"))
+                .withDate(LocalDate.of(1993, 8, 31)).withTag(Tag.builder().withId(1).withName("Food").build()).build();
     }
 
     @Test
@@ -60,14 +53,8 @@ class Sql2oExpenseDaoIT extends Sql2oDaoIntegration {
     @Test
     void testUpdate() {
         expenseDao.create(testExpense);
-        final Expense newTestData = testExpense.asBuilder()
-                .withAmount(new BigDecimal("120.0000"))
-                .withDate(LocalDate.of(2018, 3, 16))
-                .withTag(Tag.builder()
-                        .withId(2)
-                        .withName("Test")
-                        .build())
-                .build();
+        final Expense newTestData = testExpense.asBuilder().withAmount(new BigDecimal("120.0000"))
+                .withDate(LocalDate.of(2018, 3, 16)).withTag(Tag.builder().withId(2).withName("Test").build()).build();
         final Optional<Expense> expected = Optional.of(newTestData);
         final Optional<Expense> actual = expenseDao.update(testExpense.getId(), newTestData);
         assertEquals(expected, actual);
