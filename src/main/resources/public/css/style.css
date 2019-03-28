@@ -1,0 +1,49 @@
+html, body {
+	height: 100%;
+	min-height: 100vh;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	padding-left: 15%;
+	padding-right: 15%;
+	background-color: black;
+	color: white;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+#header {
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+#footer {
+	padding: 1em;
+}
+
+#content {
+	flex: 1 0 auto;
+	padding: 1em;
+	background-color: white;
+	color: black;
+	background-color: white;
+}
+
+#content table {
+	color: black;
+	width: 100%;
+}
+
+#content table, #content th, #content td {
+	border: 1px solid black;
+	text-align: right;
+	padding: 0.5em;
+}
+
+#footer {
+	flex-shrink: 0;
+}

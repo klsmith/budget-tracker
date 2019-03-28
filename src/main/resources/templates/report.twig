@@ -1,0 +1,37 @@
+{% extends "templates/base.twig" %}
+
+{% block title %}
+Report
+{% endblock %}
+
+{% block header %}
+Report
+{% endblock %}
+
+{% block content %}
+<table>
+	<thead>
+		<tr>
+			{% for date in model.dates %}
+			<th>{{ date }}</th>
+			{% else %}
+			<th>ERROR COULD NOT LOAD DATES</th>
+			{% endfor %}
+		</tr>
+	</thead>
+	<tbody>
+		{% for tag in model.tags %}
+		<tr>
+			<th>{{ tag }}</th>
+			{% for date in model.dates %}
+			<td>{{ model.e }} {% endfor %}
+		</tr>
+		{% else %}
+		<tr>
+			<th>NO TAGS</th>
+			<td>EMPTY</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "templates/base.twig" %}
+
+{% block title %}
+Manage Tags
+{% endblock %}
+
+{% block header %}
+<h1>Manage Tags</h1>
+{% endblock %}
+
+{% block content %}
+<div>
+	<form name="createTag" onsubmit="return handleSubmit(event);"
+		method="POST" action="/api/tag" refresh="true">
+		New Tag:
+		<input type="text" name="name" />
+		<input type="submit" value="Create" />
+	</form>
+</div>
+<br />
+<table>
+	<thead>
+		<tr>
+			<th>Control</th>
+			<th>Id</th>
+			<th>Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for tag in model.tags %}
+		<tr>
+			<td>
+				<form name="deleteTag" onsubmit="return handleSubmit(event);"
+					method="DELETE" action="/api/tag/{{ tag.id }}" refresh="true">
+					<input type="submit" value="X" />
+				</form>
+			</td>
+			<td>
+				{{ tag.id }}
+			</td>
+			<td>
+				{{ tag.name }}
+			</td>
+		</tr>
+		{% else %}
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}
