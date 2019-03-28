@@ -34,7 +34,7 @@ public class TagController {
 	public String postTag(Request request, Response response) {
 		response.type(RESPONSE_TYPE_APPLICATION_JSON);
 		return parseJson(request.body())
-				.map(service::create)
+				.map(service::save)
 				.map(this::toJson)
 				.orElseThrow(RuntimeException::new);
 	}

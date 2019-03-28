@@ -13,8 +13,11 @@ public class TagService {
 		this.context = context;
 	}
 
-	public Tag create(Tag tag) {
-		return context.getTagDao().create(tag);
+	public Tag save(Tag tag) {
+		final TagDao tagDao = context.getTagDao();
+		final String tagName = tag.getName();
+		return tagDao.read(tagName)
+				.orElseGet(() -> tagDao.create(tagName));
 	}
 
 	public Optional<Tag> findById(long id) {
