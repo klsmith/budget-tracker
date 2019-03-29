@@ -48,7 +48,8 @@ public class Sql2oTagDao extends Sql2oDao implements TagDao {
 	 * @see Sql2oTagDao#create(String)
 	 */
 	public Tag create(Connection connection, String tagName) {
-		connection.createQuery("INSERT INTO Tag (name) VALUES (:nameParam);").addParameter("nameParam", tagName)
+		connection.createQuery("INSERT INTO Tag (name) VALUES (:nameParam);")
+				.addParameter("nameParam", tagName)
 				.executeUpdate();
 		final long id = getLastInsertId(connection);
 		return read(connection, id)
@@ -56,21 +57,22 @@ public class Sql2oTagDao extends Sql2oDao implements TagDao {
 	}
 
 	@Override
-	public Tag map(long expenseId, String tagName) {
+	public Tag mapExpense(long expenseId, String tagName) {
 		return transaction(connection -> mapExpense(connection, expenseId, tagName));
 	}
 
 	/**
 	 * Uses an existing connection instead of creating a new one.
 	 * 
-	 * @see Sql2oTagDao#map(long, String)
+	 * @see Sql2oTagDao#mapExpense(long, String)
 	 */
 	public Tag mapExpense(Connection connection, long expenseId, String tagName) {
 		final Tag tag = read(connection, tagName).orElseGet(() -> create(connection, tagName));
-		connection
-				.createQuery(
-						"INSERT IGNORE INTO TagExpense " + "(tagId, expenseId) VALUES (:tagIdParam, :expenseIdParam);")
-				.addParameter("tagIdParam", tag.getId()).addParameter("expenseIdParam", expenseId).executeUpdate();
+		connection.createQuery("INSERT IGNORE INTO TagExpense "
+				+ "(tagId, expenseId) VALUES (:tagIdParam, :expenseIdParam);")
+				.addParameter("tagIdParam", tag.getId())
+				.addParameter("expenseIdParam", expenseId)
+				.executeUpdate();
 		return tag;
 	}
 
@@ -81,22 +83,58 @@ public class Sql2oTagDao extends Sql2oDao implements TagDao {
 	 */
 	public Tag mapIncome(Connection connection, long incomeId, String tagName) {
 		final Tag tag = read(connection, tagName).orElseGet(() -> create(connection, tagName));
-		connection
-				.createQuery(
-						"INSERT IGNORE INTO TagIncome " + "(tagId, incomeId) VALUES (:tagIdParam, :incomeIdParam);")
-				.addParameter("tagIdParam", tag.getId()).addParameter("incomeIdParam", incomeId).executeUpdate();
+		connection.createQuery("INSERT IGNORE INTO TagIncome "
+				+ "(tagId, incomeId) VALUES (:tagIdParam, :incomeIdParam);")
+				.addParameter("tagIdParam", tag.getId())
+				.addParameter("incomeIdParam", incomeId)
+				.executeUpdate();
 		return tag;
 	}
 
 	@Override
-	public List<Tag> map(long expenseId, List<Tag> tags) {
-		return transaction(connection -> map(connection, expenseId, tags));
+	public List<Tag> mapExpense(long expenseId, List<Tag> tags) {
+		return transaction(connection -> mapExpense(connection, expenseId, tags));
 	}
 
-	public List<Tag> map(Connection connection, long expenseId, List<Tag> tags) {
+	public List<Tag> mapExpense(Connection connection, long expenseId, List<Tag> tags) {
 		final List<Tag> results = new ArrayList<>();
 		for (Tag tag : tags) {
 			final Tag newTag = mapExpense(connection, expenseId, tag.getName());
+			results.add(newTag);
+		}
+		return results;
+	}
+
+	@Override
+	public Tag mapBudget(long budgetId, String tagName) {
+		return transaction(connection -> mapBudget(connection, budgetId, tagName));
+	}
+
+	/**
+	 * Uses an existing connection instead of creating a new one.
+	 * 
+	 * @see Sql2oTagDao#mapBudget(long, String)
+	 */
+	public Tag mapBudget(Connection connection, long expenseId, String tagName) {
+		final Tag tag = read(connection, tagName)
+				.orElseGet(() -> create(connection, tagName));
+		connection.createQuery("INSERT IGNORE INTO TagBudget "
+				+ "(tagId, budgetId) VALUES (:tagIdParam, :budgetIdParam);")
+				.addParameter("tagIdParam", tag.getId())
+				.addParameter("budgetIdParam", expenseId)
+				.executeUpdate();
+		return tag;
+	}
+
+	@Override
+	public List<Tag> mapBudget(long budgetId, List<Tag> tags) {
+		return transaction(connection -> mapBudget(connection, budgetId, tags));
+	}
+
+	public List<Tag> mapBudget(Connection connection, long budgetId, List<Tag> tags) {
+		final List<Tag> results = new ArrayList<>();
+		for (Tag tag : tags) {
+			final Tag newTag = mapBudget(connection, budgetId, tag.getName());
 			results.add(newTag);
 		}
 		return results;
@@ -162,10 +200,9 @@ public class Sql2oTagDao extends Sql2oDao implements TagDao {
 	 * @see Sql2oTagDao#readForExpense(long)
 	 */
 	public List<Tag> readForExpense(Connection connection, long expenseId) {
-		return connection
-				.createQuery("SELECT Tag.id, Tag.name FROM Tag\n"
-						+ "JOIN TagExpense ON TagExpense.tagId = Tag.id\n"
-						+ "WHERE TagExpense.expenseId = :expenseIdParam;")
+		return connection.createQuery("SELECT Tag.id, Tag.name FROM Tag\n"
+				+ "JOIN TagExpense ON TagExpense.tagId = Tag.id\n"
+				+ "WHERE TagExpense.expenseId = :expenseIdParam;")
 				.addParameter("expenseIdParam", expenseId)
 				.executeAndFetch(TagBuilder.class)
 				.stream()
@@ -184,11 +221,31 @@ public class Sql2oTagDao extends Sql2oDao implements TagDao {
 	 * @see Sql2oTagDao#readForExpense(long)
 	 */
 	public List<Tag> readForIncome(Connection connection, long incomeId) {
-		return connection
-				.createQuery("SELECT Tag.id, Tag.name FROM Tag\n"
-						+ "JOIN TagIncome ON TagIncome.tagId = Tag.id\n"
-						+ "WHERE TagIncome.incomeId = :incomeIdParam;")
+		return connection.createQuery("SELECT Tag.id, Tag.name FROM Tag\n"
+				+ "JOIN TagIncome ON TagIncome.tagId = Tag.id\n"
+				+ "WHERE TagIncome.incomeId = :incomeIdParam;")
 				.addParameter("incomeIdParam", incomeId)
+				.executeAndFetch(TagBuilder.class)
+				.stream()
+				.map(TagBuilder::build)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Tag> readForBudget(long budgetId) {
+		return transaction(connection -> readForBudget(connection, budgetId));
+	}
+
+	/**
+	 * Uses an existing connection instead of creating a new one.
+	 * 
+	 * @see Sql2oTagDao#readForBudget(long)
+	 */
+	public List<Tag> readForBudget(Connection connection, long budgetId) {
+		return connection.createQuery("SELECT Tag.id, Tag.name FROM Tag\n"
+				+ "JOIN TagBudget ON TagBudget.tagId = Tag.id\n"
+				+ "WHERE TagBudget.budgetId = :budgetIdParam;")
+				.addParameter("budgetIdParam", budgetId)
 				.executeAndFetch(TagBuilder.class)
 				.stream()
 				.map(TagBuilder::build)
