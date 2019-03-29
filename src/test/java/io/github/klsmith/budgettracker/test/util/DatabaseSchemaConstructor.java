@@ -11,8 +11,6 @@ import org.sql2o.Query;
 import org.sql2o.Sql2o;
 
 import ch.vorburger.exec.ManagedProcessException;
-import io.github.klsmith.budgettracker.money.expense.Expense;
-import io.github.klsmith.budgettracker.money.income.Income;
 import io.github.klsmith.budgettracker.sql2o.Sql2oDao;
 
 /**
@@ -119,10 +117,12 @@ public class DatabaseSchemaConstructor extends Sql2oDao {
     public void setupFullSchema() {
         transaction(connection -> {
             setupExpenseTable(connection);
-            setupIncomeTable(connection);
-            setupTagTable(connection);
             setupTagExpenseMapTable(connection);
+            setupBudgetTable(connection);
+            setupTagBudgetMapTable(connection);
+            setupIncomeTable(connection);
             setupTagIncomeMapTable(connection);
+            setupTagTable(connection);
             return null;
         });
     }
@@ -145,6 +145,17 @@ public class DatabaseSchemaConstructor extends Sql2oDao {
         try (final Query query = connection
                 .createQuery("CREATE TABLE Income (" + "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,"
                         + "date DATE NOT NULL," + "amount DECIMAL(13, 4) NOT NULL," + "PRIMARY KEY(id));")) {
+            query.executeUpdate();
+        }
+    }
+
+    public void setupBudgetTable(Connection connection) {
+        try (final Query query = connection.createQuery(
+                "CREATE TABLE Budget ("
+                        + "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,"
+                        + "date DATE,"
+                        + "amount DECIMAL(13, 4) NOT NULL,"
+                        + "PRIMARY KEY(id));")) {
             query.executeUpdate();
         }
     }
@@ -176,6 +187,19 @@ public class DatabaseSchemaConstructor extends Sql2oDao {
     public void setupTagIncomeMapTable(Connection connection) {
         try (final Query query = connection.createQuery("CREATE TABLE TagIncome (" + "tagId BIGINT UNSIGNED NOT NULL,"
                 + "incomeId BIGINT UNSIGNED NOT NULL," + "PRIMARY KEY(tagId, incomeId));")) {
+            query.executeUpdate();
+        }
+    }
+
+    /**
+     * Create the TagBudget table schema.
+     */
+    public void setupTagBudgetMapTable(Connection connection) {
+        try (final Query query = connection.createQuery(
+                "CREATE TABLE TagBudget ("
+                        + "tagId BIGINT UNSIGNED NOT NULL,"
+                        + "budgetId BIGINT UNSIGNED NOT NULL,"
+                        + "PRIMARY KEY(tagId, budgetId));")) {
             query.executeUpdate();
         }
     }
