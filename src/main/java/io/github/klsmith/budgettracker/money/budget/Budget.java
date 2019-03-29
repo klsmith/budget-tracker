@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.github.klsmith.budgettracker.money.expense.Expense;
 import io.github.klsmith.budgettracker.tag.Tag;
 
 /**

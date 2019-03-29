@@ -11,7 +11,7 @@ import io.github.klsmith.budgettracker.dao.LongKeyDao;
 public interface TagDao extends LongKeyDao<Tag> {
 
 	/**
-	 * Create an new row in the Tag table, with the given data.<br/>
+	 * Create a new row in the Tag table, with the given data.<br/>
 	 * </br>
 	 * <strong>Note:</strong> the id field must be ignored in all implementations.
 	 * 
